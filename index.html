@@ -1,320 +1,616 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aj Max - Web Developer & Designer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Arman Singh Dhaliwal | Cybersecurity Analyst</title>
+  <meta name="description" content="Cybersecurity portfolio of Arman Singh Dhaliwal – Aspiring CISO, GRC & SOC analyst, researcher.">
+  <!-- Fonts: Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- GSAP + ScrollTrigger for motion -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    /* Variables and resets – all clean but not overly uniform */
+    :root {
+      --bg: #FAFAFA;
+      --surface: #FFFFFF;
+      --text: #0E0E12;
+      --text-muted: #555555;
+      --accent: #FF5E00;
+      --accent-glow: 0 0 12px rgba(255, 94, 0, 0.3);
+      --border: rgba(14, 14, 18, 0.08);
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    #particle-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    /* Navigation – same animated look */
+    nav {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      z-index: 100;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(250, 250, 250, 0.8);
+      backdrop-filter: blur(12px);
+      transition: background 0.3s, box-shadow 0.3s, border-color 0.3s;
+      border-bottom: 1px solid var(--border);
+    }
+    nav.scrolled {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 25px rgba(255, 94, 0, 0.08);
+      border-bottom: 1px solid rgba(255, 94, 0, 0.15);
+    }
+    .logo {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--text);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .logo-prompt { color: var(--text); }
+    .logo-tilde {
+      color: var(--accent);
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+    .logo-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 1.2rem;
+      background: var(--accent);
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+      box-shadow: 0 0 8px rgba(255,94,0,0.6);
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
 
-  <!-- SEO & Social -->
-  <meta name="description" content="Aj Max — ISO-certified Web Developer & Designer. I build responsive, user-friendly websites for businesses and individuals. Contact me for custom web solutions.">
-  <meta name="keywords" content="Aj Max, web developer, web designer, ISO certified, responsive website, portfolio">
-  <meta property="og:title" content="Aj Max — Web Developer & Designer">
-  <meta property="og:description" content="ISO-certified web developer building fast, responsive and beautiful websites.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="path-to-preview-image.png">
+    /* Sections */
+    section { padding: 8rem 0; position: relative; }
+    .section-title {
+      font-family: var(--font-mono);
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3rem;
+      letter-spacing: 1px;
+      display: inline-block;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.5rem;
+    }
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-top: 5rem;
+    }
+    .terminal-badge {
+      display: inline-block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 2rem;
+      margin-bottom: 2.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .hero h1 {
+      font-family: var(--font-mono);
+      font-size: clamp(3rem, 9vw, 5.5rem);
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .tagline {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      font-weight: 400;
+    }
+    .cta-button {
+      display: inline-block;
+      background: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-weight: 600;
+      padding: 0.9rem 2.6rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-button::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--accent);
+      transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+      z-index: -1;
+    }
+    .cta-button:hover::before { left: 0; }
+    .cta-button:hover {
+      color: #fff;
+      box-shadow: 0 0 30px rgba(255,94,0,0.5);
+      transform: translateY(-2px);
+    }
 
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/animations.css">
+    .about-text p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2.2rem;
+    }
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem 2rem 1.8rem;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      perspective: 800px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .project-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 15px 35px rgba(255,94,0,0.12);
+      transform: translateY(-5px);
+    }
+    .project-card h3 {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+    .project-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin-bottom: 1.2rem;
+    }
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .tag {
+      background: rgba(255,94,0,0.05);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      font-weight: 500;
+      letter-spacing: 0.4px;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+    .credential-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.8rem;
+      transition: box-shadow 0.3s, border-color 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .credential-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px rgba(255,94,0,0.12);
+    }
+    .credential-card h4 {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--text);
+      margin-bottom: 1.3rem;
+    }
+    .credential-list li {
+      color: var(--text);
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+    }
+    .credential-list li::before {
+      content: "▹";
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .contact-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .mail-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.85rem 2.2rem;
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .mail-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 25px rgba(255,94,0,0.4);
+      transform: scale(1.03);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 0;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .magnetic { transition: transform 0.2s ease-out; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero h1 { font-size: 2.5rem; }
+      .terminal-badge { font-size: 0.8rem; padding: 0.8rem 1.5rem; }
+    }
+  </style>
 </head>
 <body>
-  <!-- Page Transition Overlay -->
-  <div class="page-transition" aria-hidden="true"></div>
+  <canvas id="particle-canvas"></canvas>
 
-  <!-- Animated Background Elements -->
-  <div class="bg-animation">
-    <div class="floating-shapes">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-      <div class="shape shape-4"></div>
+  <!-- Header with terminal-like logo -->
+  <nav id="navbar">
+    <div class="logo">
+      <span class="logo-prompt">asd:~</span><span class="logo-tilde">$</span>
+      <span class="logo-cursor"></span>
     </div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div>
+        <div class="terminal-badge" id="terminal-badge">
+          <span style="color:var(--accent);">whoami</span> → <span id="typing-output"></span><span class="cursor">|</span>
+        </div>
+        <h1>Arman Singh<br>Dhaliwal</h1>
+        <p class="tagline">Cybersecurity Analyst | Aspiring CISO | Researcher</p>
+        <a href="#projects" class="cta-button magnetic">View My Projects</a>
+      </div>
+    </section>
+
+    <!-- About (human-sounding copy) -->
+    <section id="about">
+      <h2 class="section-title">About</h2>
+      <div class="about-text">
+        <p>
+          I didn't grow up thinking I'd end up in cybersecurity. Actually, my background is in commerce—numbers, business logic, strategy. Then there's table tennis. Played at the state level for years, and honestly that's where I learned the most about discipline and staying calm when things get messy. That's pretty much the same mindset I bring to analyzing threats.
+        </p>
+        <p>
+          These days I spend my time on GRC, SOC operations, and breaking down how AI systems can be tricked (that's where my RAG poisoning research comes in). My endgame? CISO. Not just the technical side—I want to be the person who connects security to actual business risk, and I'm already building that bridge piece by piece.
+        </p>
+      </div>
+    </section>
+
+    <!-- Projects (with natural language) -->
+    <section id="projects">
+      <h2 class="section-title">Projects</h2>
+      <div class="projects-grid">
+        <div class="project-card magnetic">
+          <h3>RAG Poisoning Vulnerability</h3>
+          <p>
+            So I got curious about Zendesk's AI agents—how they fetch info and what happens if someone slips in a nasty prompt. Turns out, you can poison the retrieval pipeline. I wrote up the whole thing: the attack vector, the impact, and what a fix might look like. Real eye-opener for me.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Vulnerability Assessment</span>
+            <span class="tag">AI Agents</span>
+            <span class="tag">Zendesk</span>
+          </div>
+        </div>
+        <div class="project-card magnetic">
+          <h3>Project Aegis</h3>
+          <p>
+            I built automated trading bots for WLD and INJ. But here's the thing—I don't write code. The whole strategy, the logic, the risk rules? Those are mine. I sat down with Gemini and basically said "here's what I want," and we coded it together. The bot works, and it's purely my design.
+          </p>
+          <div class="project-tags">
+            <span class="tag">API Integration</span>
+            <span class="tag">Financial Data Analysis</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills & Credentials -->
+    <section id="skills">
+      <h2 class="section-title">Skills & Credentials</h2>
+      <div class="skills-grid">
+        <div class="credential-card">
+          <h4>Certifications</h4>
+          <ul class="credential-list">
+            <li>IBM Cybersecurity Analyst</li>
+            <li>Cisco Introduction to Cybersecurity</li>
+            <li>TryHackMe Pre-Security</li>
+          </ul>
+        </div>
+        <div class="credential-card">
+          <h4>Technical Stack</h4>
+          <ul class="credential-list">
+            <li>Linux (Debian/Kali)</li>
+            <li>HTML</li>
+            <li>Security Auditing</li>
+            <li>GRC</li>
+            <li>SOC Analysis</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <h2 class="section-title">Connect</h2>
+      <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1rem;">
+        If you're into security, research, or just want to chat about where the industry's heading—hit me up.
+      </p>
+      <div class="contact-wrapper">
+        <a href="mailto:arman979361@gmail.com" class="mail-btn magnetic">arman979361@gmail.com</a>
+      </div>
+    </section>
+
+    <!-- Footer with dual credits -->
+    <footer>
+      <p>© 2026 Arman Singh Dhaliwal — Built with discipline & orange glow.</p>
+      <p>Debug & Assistance: DeepSeek</p>
+    </footer>
   </div>
 
-  <!-- Header -->
-  <header>
-    <div class="container">
-      <nav aria-label="Main navigation">
-        <a href="#home" class="logo glass">AJ MAX</a>
+  <!-- All the motion magic preserved -->
+  <script>
+    // Particle network (subtle orange nodes on light background)
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const particleColor = '#FF5E00';
+    const maxDist = 110;
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
 
-        <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-navigation">
-          <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.35;
+        this.vy = (Math.random() - 0.5) * 0.35;
+        this.r = Math.random() * 1.8 + 0.4;
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+        ctx.fillStyle = particleColor;
+        ctx.globalAlpha = 0.15;
+        ctx.fill();
+      }
+    }
+    for (let i=0; i<75; i++) particles.push(new Particle());
 
-        <ul class="nav-links" id="primary-navigation" role="menubar">
-          <li role="none"><a role="menuitem" href="#home">Home</a></li>
-          <li role="none"><a role="menuitem" href="#about">About</a></li>
-          <li role="none"><a role="menuitem" href="#skills">Skills</a></li>
-          <li role="none"><a role="menuitem" href="#certifications">Certifications</a></li>
-          <li role="none"><a role="menuitem" href="#portfolio">Portfolio</a></li>
-          <li role="none"><a role="menuitem" href="#services">Services</a></li>
-          <li role="none"><a role="menuitem" href="#pricing">Pricing</a></li>
-          <li role="none"><a role="menuitem" href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+    function connect() {
+      for (let i=0; i<particles.length; i++) {
+        for (let j=i+1; j<particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx*dx+dy*dy);
+          if (dist < maxDist) {
+            ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(255,94,0,${0.04 * (1 - dist/maxDist)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+    function animateParticles() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      connect();
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
 
-  <main>
-    <!-- Hero Section -->
-<<!-- Hero Section -->
-		<section id="home" class="hero">
-		  <div class="container">
-			<div class="hero-content" aria-labelledby="hero-heading">
-			  <h1 id="hero-heading">Hi, I'm <span style="color: var(--warm-orange);">Aj Max</span></h1>
-			  <p>ISO-certified Web Developer & Designer creating stunning, user-friendly websites that drive results.</p>
-			  <div class="hero-btns">
-				<a href="#portfolio" class="btn">View My Work</a>
-				<a href="#contact" class="btn btn-outline">Get In Touch</a>
-			  </div>
-			</div>
-		  </div>
-		</section>
+    // GSAP animations
+    gsap.registerPlugin(ScrollTrigger);
 
-    <!-- About Section -->
-    <section id="about" class="about">
-      <div class="container">
-        <h2 class="section-title">About Me</h2>
-        <div class="about-content">
-          <div class="about-text">
-            <p>I'm Aj Max, an ISO-certified Website Developer and Designer dedicated to creating visually stunning, user-friendly, and highly functional websites. With a blend of creativity and technical expertise, I deliver responsive, clean, and intuitive designs that enhance user experience and drive results.</p>
-            <p>My work ensures every website — whether a personal portfolio, business site, or e-commerce platform — looks professional, performs flawlessly, and meets the highest quality standards.</p>
-            <a href="#contact" class="btn btn-glow">Hire Me</a>
-          </div>
-          <div class="about-image">
-            <div class="image-container glass">
-              <img src="https://i.ibb.co/39jQbst0/logo.png" alt="Aj Max portrait placeholder" class="profile-img" loading="lazy">
-              <div class="image-glow"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 80) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    });
 
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-      <div class="container">
-        <h2 class="section-title">My Skills</h2>
-        <div class="skills-grid">
-          <div class="skill-card glass animate-float">
-            <div class="skill-icon"><i class="fas fa-code" aria-hidden="true"></i></div>
-            <h3>Frontend Development</h3>
-            <p>HTML5, CSS3, JavaScript, React, Responsive Design</p>
-          </div>
-          <div class="skill-card glass animate-float" style="animation-delay: 0.2s;">
-            <div class="skill-icon"><i class="fas fa-palette" aria-hidden="true"></i></div>
-            <h3>Web Design</h3>
-            <p>UI/UX Design, Wireframing, Prototyping, Visual Design</p>
-          </div>
-          <div class="skill-card glass animate-float" style="animation-delay: 0.4s;">
-            <div class="skill-icon"><i class="fas fa-mobile-alt" aria-hidden="true"></i></div>
-            <h3>Responsive Design</h3>
-            <p>Mobile-First Approach, Cross-Browser Compatibility</p>
-          </div>
-          <div class="skill-card glass animate-float" style="animation-delay: 0.6s;">
-            <div class="skill-icon"><i class="fas fa-rocket" aria-hidden="true"></i></div>
-            <h3>Performance Optimization</h3>
-            <p>Fast Loading, SEO Best Practices, Clean Code</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    // Section reveals
+    document.querySelectorAll('section').forEach(s => {
+      gsap.from(s, {
+        scrollTrigger: { trigger: s, start: 'top 78%' },
+        opacity: 0,
+        y: 50,
+        duration: 0.9,
+        ease: 'power3.out'
+      });
+    });
 
-    <!-- Certifications & Achievements -->
-    <section id="certifications" class="certifications">
-      <div class="container">
-        <h2 class="section-title">Certifications & Achievements</h2>
-        <div class="cert-grid">
-          <div class="cert-card glass animate-pulse">
-            <div class="cert-badge">
-              <i class="fas fa-award"></i>
-            </div>
-            <h3>ISO Certified</h3>
-            <p>ISO certification for quality management — ensuring high standards in project delivery and process.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    gsap.from('.project-card', {
+      scrollTrigger: { trigger: '#projects', start: 'top 75%' },
+      opacity: 0,
+      y: 40,
+      stagger: 0.15,
+      duration: 0.7,
+      ease: 'power2.out'
+    });
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio">
-      <div class="container">
-        <h2 class="section-title">My Portfolio</h2>
-        <div class="portfolio-grid">
-          <div class="portfolio-item glass" role="article" aria-labelledby="proj1">
-            <img class="portfolio-img" src="https://i.ibb.co/6RghXSWL/image-2025-10-10-182903362.png" alt="Law Firm Website - Aj Max" loading="lazy">
-            <div class="portfolio-overlay">
-              <h3 id="proj1">Law Firm Website</h3>
-              <p>Modern, professional website tailored for legal practices.</p>
-				<a href="https://ajmax76.github.io/law-firm" class="btn btn-glow" style="margin-top:15px;">View Website</a>
-              
-            </div>
-          </div>
+    gsap.from('.credential-card', {
+      scrollTrigger: { trigger: '#skills', start: 'top 78%' },
+      opacity: 0,
+      y: 30,
+      stagger: 0.1,
+      duration: 0.7,
+      ease: 'power2.out'
+    });
 
-          <div class="portfolio-item glass" role="article" aria-labelledby="proj2">
-            <img class="portfolio-img" src="https://i.ibb.co/bjJW4PdP/image-2025-10-10-182536228.png" alt="Demo school website - Aj Max" loading="lazy">
-            <div class="portfolio-overlay">
-              <h3 id="proj2">Demo school website</h3>
-              <p>Fully functional online store with payment integration and product management.</p>
-				<a href="https://ajmax76.github.io/demo-school-website" class="btn btn-glow" style="margin-top:15px;">View Website</a>
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    // Magnetic buttons
+    document.querySelectorAll('.magnetic').forEach(el => {
+      el.addEventListener('mousemove', e => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width/2;
+        const y = e.clientY - rect.top - rect.height/2;
+        gsap.to(el, { x: x*0.25, y: y*0.25, duration: 0.2, ease: 'power3.out' });
+      });
+      el.addEventListener('mouseleave', () => {
+        gsap.to(el, { x:0, y:0, duration:0.4, ease:'elastic.out(1,0.4)' });
+      });
+    });
 
-    <!-- Services Section -->
-    <section id="services" class="services">
-      <div class="container">
-        <h2 class="section-title">My Services</h2>
-        <div class="services-grid">
-          <div class="service-card glass animate-float">
-            <div class="service-icon"><i class="fas fa-laptop-code" aria-hidden="true"></i></div>
-            <h3>Website Development</h3>
-            <p>Custom, responsive websites built with clean code and modern technologies.</p>
-            <div class="price">Starting at $200</div>
-            <a href="#contact" class="btn btn-glow">Get Quote</a>
-          </div>
+    // 3D tilt on project cards
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cX = rect.width/2;
+        const cY = rect.height/2;
+        gsap.to(card, {
+          rotateX: ((y-cY)/cY)*-6,
+          rotateY: ((x-cX)/cX)*6,
+          duration:0.4,
+          ease:'power2.out',
+          transformPerspective:800
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, { rotateX:0, rotateY:0, duration:0.6, ease:'elastic.out(1,0.4)' });
+      });
+    });
 
-          <div class="service-card glass animate-float" style="animation-delay: 0.2s;">
-            <div class="service-icon"><i class="fas fa-paint-brush" aria-hidden="true"></i></div>
-            <h3>Web Design</h3>
-            <p>User-centered designs that are visually appealing and highly functional.</p>
-            <div class="price">Starting at $150</div>
-            <a href="#contact" class="btn btn-glow">Get Quote</a>
-          </div>
+    // Typing effect for terminal badge
+    const out = document.getElementById('typing-output');
+    const full = 'Arman Singh Dhaliwal';
+    let idx = 0;
+    function type() {
+      if (idx < full.length) {
+        out.textContent += full.charAt(idx);
+        idx++;
+        setTimeout(type, 70);
+      }
+    }
+    setTimeout(type, 400);
 
-          <div class="service-card glass animate-float" style="animation-delay: 0.4s;">
-            <div class="service-icon"><i class="fas fa-shopping-cart" aria-hidden="true"></i></div>
-            <h3>E-commerce Solutions</h3>
-            <p>Online stores with secure payment processing and inventory management.</p>
-            <div class="price">Starting at $500</div>
-            <a href="#contact" class="btn btn-glow">Get Quote</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
-      <div class="container">
-        <h2 class="section-title">Pricing & Packages</h2>
-        <div class="pricing-grid">
-          <div class="pricing-card glass">
-            <h3>Basic</h3>
-            <div class="price">$150</div>
-            <p>Simple landing page, responsive, 1 revision</p>
-            <a href="#contact" class="btn btn-glow">Order Basic</a>
-          </div>
-          <div class="pricing-card glass featured animate-pulse">
-            <div class="popular-badge">Most Popular</div>
-            <h3>Standard</h3>
-            <div class="price">$300</div>
-            <p>Multi-page website, responsive, SEO basics, 2 revisions</p>
-            <a href="#contact" class="btn btn-glow">Order Standard</a>
-          </div>
-          <div class="pricing-card glass">
-            <h3>Professional</h3>
-            <div class="price">$500</div>
-            <p>E-commerce or complex sites, payment integration, 3 revisions</p>
-            <a href="#contact" class="btn btn-glow">Order Professional</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-      <div class="container">
-        <h2 class="section-title">Get In Touch</h2>
-        <div class="contact-container">
-          <div class="contact-info">
-            <div class="contact-item glass">
-              <div class="contact-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
-              <div>
-                <h3>Email</h3>
-                <p><a href="mailto:ajmax979361@gmail.com" style="color:inherit; text-decoration:none;">ajmax979361@gmail.com</a></p>
-              </div>
-            </div>
-            <div class="contact-item glass">
-              <div class="contact-icon"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></div>
-              <div>
-                <h3>Location</h3>
-                <p>Available Worldwide</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="contact-form glass">
-            <form id="contactForm" aria-label="Contact form">
-              <div id="formMessages"></div>
-              <div class="form-group">
-                <label for="name">Your Name</label>
-                <input id="name" type="text" class="form-control" placeholder="Your Name" required>
-              </div>
-              <div class="form-group">
-                <label for="email">Your Email</label>
-                <input id="email" type="email" class="form-control" placeholder="Your Email" required>
-              </div>
-              <div class="form-group">
-                <label for="subject">Subject</label>
-                <input id="subject" type="text" class="form-control" placeholder="Subject" required>
-              </div>
-              <div class="form-group">
-                <label for="message">Your Message</label>
-                <textarea id="message" class="form-control" placeholder="Your Message" required></textarea>
-              </div>
-              <button type="submit" class="btn btn-glow" id="submitBtn">Send Message</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Floating CTA (Hire Me) -->
-  <div class="cta-floating" aria-hidden="false">
-    <button class="cta-main glass btn-glow" aria-label="Hire Aj Max" title="Hire Me">
-      <i class="fas fa-phone" aria-hidden="true"></i>
-    </button>
-    <div class="cta-options" aria-hidden="true">
-      <a href="mailto:ajmax979361@gmail.com?subject=Website%20Project%20Inquiry" class="cta-option glass" title="Email">
-        <i class="fas fa-envelope" aria-hidden="true"></i>
-      </a>
-      <a href="#contact" class="cta-option glass" title="Contact form">
-        <i class="fas fa-comments" aria-hidden="true"></i>
-      </a>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <a href="#home" class="logo glass" style="color:white;">AJ MAX</a>
-      <div class="social-links" role="navigation" aria-label="Social links">
-        <a href="https://github.com/Ajmax76" class="social-link glass" rel="noopener" aria-label="GitHub">
-          <i class="fab fa-github" aria-hidden="true"></i>
-        </a>
-        <a href="https://www.facebook.com/profile.php?id=100090512726588" class="social-link glass" rel="noopener" aria-label="Facebook">
-          <i class="fab fa-facebook" aria-hidden="true"></i>
-        </a>
-      </div>
-      <div class="copyright">
-        <p>&copy; 2025 Aj Max. All Rights Reserved.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/script.js"></script>
-  <script src="js/animations.js"></script>
-  <script src="js/form-handler.js"></script>
+    // Blinking cursor animation
+    const style = document.createElement('style');
+    style.textContent = '@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}.cursor{animation:blink 1s step-end infinite}';
+    document.head.appendChild(style);
+  </script>
 </body>
-
 </html>
-
-
-
-
-
